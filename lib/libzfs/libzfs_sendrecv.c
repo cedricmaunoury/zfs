@@ -319,6 +319,11 @@ send_iterate_snap(zfs_handle_t *zhp, void *arg)
 	if (isfromsnap || (sd->parent_fromsnap_guid == 0 && istosnap)) {
 		sd->parent_fromsnap_guid = guid;
 	}
+	
+	// To allow a doall stream to work correctly with a NULL fromsnap
+	if (sd->doall && sd->fromsnap == NULL && sd->seenfrom == B_FALSE) {
+          sd->seenfrom = B_TRUE;
+        }
 
 	if (!sd->recursive) {
 		if (!sd->seenfrom && isfromsnap) {
